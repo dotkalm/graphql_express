@@ -33,7 +33,7 @@ const queryType = new graphql.GraphQLObjectType({
     return {
       todos: {
         type: new graphql.GraphQLList(TodoType),
-        resolve: function () {
+        resolve: funct{
           return new Promise(function (resolve, reject) {
             setTimeout(function () {
               resolve(TODOs)
