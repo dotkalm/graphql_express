@@ -1,3 +1,4 @@
+
 const graphql = require ('graphql');  
 const TODOs = [  
   {
@@ -33,7 +34,7 @@ const queryType = new graphql.GraphQLObjectType({
     return {
       todos: {
         type: new graphql.GraphQLList(TodoType),
-        resolve: funct{
+        resolve: function(){
           return new Promise(function (resolve, reject) {
             setTimeout(function () {
               resolve(TODOs)
