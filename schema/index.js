@@ -5,13 +5,6 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('graphql1.sqlite');
 
 const fetchDB = () => {
-    db.each('SELECT * FROM users',(err,row)=>{
-        if(err){
-            throw err
-        }
-        console.log(row.name)
-        return row.name
-    })
 }
 const queryType = new graphql.GraphQLObjectType({  
   name: 'Query',
@@ -20,7 +13,14 @@ const queryType = new graphql.GraphQLObjectType({
             kids: {
                 type: graphql.GraphQLString,
                 resolve: () => {
-                    return fetchDB()
+                    return new Promise((res,rej) => {
+                        db.each('SELECT * FROM users',(err,row)=>{
+                            if(err){
+                                throw err
+                            }
+                            res(row.name)
+                        })
+                    }) 
                 }
             }
         }
