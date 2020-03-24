@@ -1,50 +1,32 @@
-
+const {MongoClient, ObjectId} = require('mongodb')
+const MONGO_URL = 'mongodb://localhost:27017/stocktalk10'
 const graphql = require ('graphql');  
-const TODOs = [  
-  {
-    "id": 1446412739542,
-    "title": "Read emails",
-    "completed": false
-  },
-  {
-    "id": 1446412740883,
-    "title": "Buy orange",
-    "completed": true
-  }
-];
-const TodoType = new graphql.GraphQLObjectType({  
-  name: 'todo',
-  fields: function () {
-    return {
-      id: {
-        type: graphql.GraphQLID
-      },
-      title: {
-        type: graphql.GraphQLString
-      },
-      completed: {
-        type: graphql.GraphQLBoolean
-      }
-    }
-  }
-});
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('graphql1.sqlite');
+
+const fetchDB = () => {
+    db.each('SELECT * FROM users',(err,row)=>{
+        if(err){
+            throw err
+        }
+        console.log(row.name)
+        return row.name
+    })
+}
 const queryType = new graphql.GraphQLObjectType({  
   name: 'Query',
-  fields: function () {
-    return {
-      todos: {
-        type: new graphql.GraphQLList(TodoType),
-        resolve: function(){
-          return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-              resolve(TODOs)
-            }, 4000)
-          });
+    fields: () => {
+        return {
+            kids: {
+                type: graphql.GraphQLString,
+                resolve: () => {
+                    return fetchDB()
+                }
+            }
         }
-      }
     }
-  }
 });
+
 module.exports = new graphql.GraphQLSchema({
-  query: queryType
+    query: queryType
 });
