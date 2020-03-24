@@ -15,7 +15,6 @@ const getOffspring = async () => {
     const client = await pool.connect()
     try{
         const result = await client.query('SELECT * FROM kids')
-        console.log(result.rows)
         return result.rows
     } finally{
         client.release()
