@@ -1,13 +1,8 @@
-const {MongoClient, ObjectId} = require('mongodb')
-
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
 const { buildSchema } = require('graphql');
 const app = express();
 const Schema = require('./schema/')
-const MONGO_URL = 'mongodb://localhost:27017/stocktalk10'
-
-
 
 app.use('/graphql', graphqlHTTP({
   schema: Schema,
