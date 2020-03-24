@@ -8,24 +8,9 @@ const Schema = require('./schema/')
 const MONGO_URL = 'mongodb://localhost:27017/stocktalk10'
 
 
-// Construct a schema, using GraphQL schema language
-//
-const schema = buildSchema(`
-  type Query {
-    hello: String
-  }
-`);
-
-// The root provides a resolver function for each API endpoint
-const root = {
-  hello: () => {
-    return 'Hello world!';
-  },
-};
 
 app.use('/graphql', graphqlHTTP({
   schema: Schema,
-  rootValue: root,
   graphiql: true,
 }));
 app.listen(4000);

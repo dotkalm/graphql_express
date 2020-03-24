@@ -1,11 +1,7 @@
-const {MongoClient, ObjectId} = require('mongodb')
-const MONGO_URL = 'mongodb://localhost:27017/stocktalk10'
 const graphql = require ('graphql');  
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('graphql1.sqlite');
 
-const fetchDB = () => {
-}
 const queryType = new graphql.GraphQLObjectType({  
   name: 'Query',
     fields: () => {
@@ -18,6 +14,7 @@ const queryType = new graphql.GraphQLObjectType({
                             if(err){
                                 throw err
                             }
+                            console.log(row.name)
                             res(row.name)
                         })
                     }) 
