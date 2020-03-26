@@ -1,12 +1,23 @@
 const graphql = require('graphql');
 const { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLObjectType } = graphql;
 const { myKids } = require('../types')
+const Pool = require('pg-pool')
 
-const removeOffspring = async (name) => {
+const dbConfig = {
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: 'graphql_hello',
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+}
+
+const removeOffspring = async (args) => {
+    const {name} = args
+    console.log(name, args)
     const pool = new Pool(dbConfig)
     const client = await pool.connect()
     try{
-        return client.query(`DELETE FROM kids WHERE name = ${name}`)
+        return client.query(`DELETE FROM kids WHERE name = '${name}';`)
     } finally{
         client.release()
     }
@@ -21,7 +32,8 @@ const Mutation = new GraphQLObjectType({
                 name: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve(parent, args){
-                return removeOffSpring(args) 
+                console.log(args)
+                return removeOffspring(args)
             }
         }
     })
