@@ -1,6 +1,6 @@
 const graphql = require ('graphql');  
 const Pool = require('pg-pool')
-//const Mutation = require('../mutation')
+const Mutation = require('../mutation')
 const { myKids } = require('../types')
 
 const dbConfig = {
@@ -38,5 +38,5 @@ const RootQuery = new graphql.GraphQLObjectType({
 
 module.exports = new graphql.GraphQLSchema({
     query: RootQuery,
-    mutation: null,
+    mutation: Mutation,
 });
