@@ -1,13 +1,13 @@
 const graphql = require ('graphql');  
 const Pool = require('pg-pool')
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('graphql1.sqlite');
+const Mutation = require('../mutation')
+
 const dbConfig = {
-  user: 'joel',
-  host: 'localhost',
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
   database: 'graphql_hello',
-  password: 'Lewis2017Francesca2019',
-  port: 5432,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 }
 
 const getOffspring = async () => {
@@ -31,7 +31,7 @@ const myKids = new graphql.GraphQLObjectType({
         }
     }
 })
-const queryType = new graphql.GraphQLObjectType({  
+const RootQuery = new graphql.GraphQLObjectType({  
     name: 'Query',
     fields: () => {
         return {
@@ -46,5 +46,6 @@ const queryType = new graphql.GraphQLObjectType({
 });
 
 module.exports = new graphql.GraphQLSchema({
-    query: queryType
+    query: RootQuery,
+    mutation: Mutation,
 });
