@@ -1,6 +1,7 @@
 const graphql = require ('graphql');  
 const Pool = require('pg-pool')
-const Mutation = require('../mutation')
+//const Mutation = require('../mutation')
+const { myKids } = require('../types')
 
 const dbConfig = {
   user: process.env.DB_USER,
@@ -21,16 +22,6 @@ const getOffspring = async () => {
     }
 }
 
-const myKids = new graphql.GraphQLObjectType({
-    name: 'child',
-    fields: () => {
-        return{
-            name:{
-                type: graphql.GraphQLString
-            }
-        }
-    }
-})
 const RootQuery = new graphql.GraphQLObjectType({  
     name: 'Query',
     fields: () => {
@@ -47,5 +38,5 @@ const RootQuery = new graphql.GraphQLObjectType({
 
 module.exports = new graphql.GraphQLSchema({
     query: RootQuery,
-    mutation: Mutation,
+    mutation: null,
 });
