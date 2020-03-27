@@ -51,7 +51,7 @@ const Mutation = new GraphQLObjectType({
         addChild: {
             type: myKids,
             args: {
-                name: { type: new GraphQLNonNull(GraphQLString) }
+                name: { type: new GraphQLNonNull(GraphQLString) },
             },
             resolve(parent, args){
                 return addOffspring(args)
