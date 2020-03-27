@@ -23,9 +23,38 @@ const removeOffspring = async (args) => {
     }
 }
 
+const addOffspring = async (args) => {
+    const {name} = args
+    const pool = new Pool(dbConfig)
+    const client = await pool.connect()
+    try{
+        return client.query(`INSERT INTO kids (name) VALUES ('${name}');`)
+    } finally{
+        client.release()
+    }
+
+}
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({
+        addChild: {
+            type: myKids,
+            args: {
+                name: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve(parent, args){
+                return addOffspring(args)
+                    .then(res => {
+                        if (res) {
+                            return res
+                        }
+                        return new Error(`child no can be created`)
+                    })
+                    .catch(() => {
+                        return new Error(`bigtime error`)
+                    })
+            }
+        },
         deleteChild: {
             type: myKids,
             args: {
