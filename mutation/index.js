@@ -32,8 +32,19 @@ const addOffspring = async (args) => {
     } finally{
         client.release()
     }
-
 }
+
+const renameOffspring = async (args) => {
+    const {newName, oldName} = args
+    const pool = new Pool(dbConfig)
+    const client = await pool.connect()
+    try{
+        return client.query(`UPDATE kids SET name = '${newName}' WHERE name = '${oldName}';`)
+    } finally{
+        client.release()
+    }
+
+} 
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({
