@@ -84,7 +84,7 @@ const Mutation = new GraphQLObjectType({
                         return new Error(`bigtime error`)
                     })
             }
-        }
+        },
         deleteChild: {
             type: myKids,
             args: {
