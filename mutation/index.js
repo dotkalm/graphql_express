@@ -66,6 +66,25 @@ const Mutation = new GraphQLObjectType({
                     })
             }
         },
+        renameChild: {
+            type: myKids,
+            args: {
+                newName: { type: new GraphQLNonNull(GraphQLString) },
+                oldName: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve(parent, args){
+                return renameOffspring(args)
+                    .then(res => {
+                        if (res) {
+                            return res
+                        }
+                        return new Error(`child no can be created`)
+                    })
+                    .catch(() => {
+                        return new Error(`bigtime error`)
+                    })
+            }
+        }
         deleteChild: {
             type: myKids,
             args: {
