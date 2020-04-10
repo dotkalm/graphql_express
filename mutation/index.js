@@ -13,7 +13,6 @@ const dbConfig = {
 
 const removeOffspring = async (args) => {
     const {name} = args
-    console.log(name, args)
     const pool = new Pool(dbConfig)
     const client = await pool.connect()
     try{

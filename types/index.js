@@ -1,11 +1,11 @@
 const graphql = require('graphql');
-
+const { GraphQLDateTime } = require('graphql-iso-date')
 const {
     GraphQLObjectType,
     GraphQLID,
     GraphQLString,
     GraphQLInt,
-    GraphQLNonNull
+    GraphQLNonNull 
 } = graphql;
 
 const myKids = new graphql.GraphQLObjectType({
@@ -17,9 +17,29 @@ const myKids = new graphql.GraphQLObjectType({
             },
             id: {
                 type: graphql.GraphQLInt
+            },
+            birthday: {
+                type: GraphQLDateTime,
             }
+
         }
     }
 })
 
-module.exports = { myKids }
+const kidsBirthdays = new graphql.GraphQLObjectType({
+    name: 'birth',
+    fields: () => {
+        return{
+            birthday:{
+                type: graphql.GraphQLString
+            },
+            name:{
+                type: graphql.GraphQLString
+            },
+            time:{
+                type: graphql.GraphQLString
+            }
+        }
+    }
+})
+module.exports = { myKids, kidsBirthdays }
