@@ -7,16 +7,9 @@ const Schema = require('./schema/')
 const bodyParser = require('body-parser');
 
 
-console.log(process.env)
-
-const loggingMiddleware = (req, res, next) => {
-    console.log('ip:', req.ip, req);
-    next();
-}
 
 const root = {
     ip: function (args, request){
-        //console.log(request)
         return request.ip;
     }
 }
@@ -30,8 +23,8 @@ app.use(session(
     })
 );
 
-app.use(loggingMiddleware)
-app.use('/graphql', 
+app.use(
+    '/graphql', 
     graphqlHTTP({
     schema: Schema,
     rootValue: root,

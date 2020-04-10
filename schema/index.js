@@ -42,7 +42,9 @@ const RootQuery = new graphql.GraphQLObjectType({
         return {
             kids: {
                 type: new graphql.GraphQLList(myKids),
-                resolve: () => {
+                resolve: (parentValue, args, request) => {
+                    console.log(parentValue, args)
+                    console.log(request.session, "request dot session")
                     return getOffspring()
                 } 
             },
