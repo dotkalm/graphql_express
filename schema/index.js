@@ -1,7 +1,7 @@
 const graphql = require ('graphql');  
 const Pool = require('pg-pool')
 const Mutation = require('../mutation')
-const { myKids, kidsBirthdays } = require('../types')
+const { myKids, kidsBirthdays} = require('../types')
 
 const dbConfig = {
   user: process.env.DB_USER,
@@ -36,6 +36,10 @@ const getBirthdays = async () => {
         client.release()
     }
 }
+const getDetailsForChild = async (child) => {
+    console.log(child)
+    return [{name: child}]
+}
 const RootQuery = new graphql.GraphQLObjectType({  
     name: 'Query',
     fields: () => {
@@ -53,14 +57,15 @@ const RootQuery = new graphql.GraphQLObjectType({
                 } 
             },
             getDetails: {
-                type: UserType,
+                type: new graphql.GraphQLList(myKids),
                 args: {
                     name: {
                         description: 'the name of the child',
-                        type: new GraphQLNonNull(GraphQLString)
+                        type: new graphql.GraphQLNonNull(graphql.GraphQLString)
                     }
                 },
                 resolve: (root, {name}) => {
+                    return getDetailsForChild(name)
                 }
             }
         }

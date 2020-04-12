@@ -10,10 +10,8 @@ const bodyParser = require('body-parser');
 app.use(cors())
 
 const root = {
-    rollDice: ({numDice,numSides}) => {
-        console.log(numDice,numSides)
-        console.log(request.ip, args)
-        return request.ip;
+    getDetailsForChild: ({name}) => {
+        console.log(name)
     }
 }
 app.use(session(
