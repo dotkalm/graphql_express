@@ -43,8 +43,6 @@ const RootQuery = new graphql.GraphQLObjectType({
             kids: {
                 type: new graphql.GraphQLList(myKids),
                 resolve: (parentValue, args, request) => {
-                    console.log(parentValue, args)
-                    console.log(request.session, "request dot session")
                     return getOffspring()
                 } 
             },
@@ -53,6 +51,17 @@ const RootQuery = new graphql.GraphQLObjectType({
                 resolve: () => {
                     return getBirthdays()
                 } 
+            },
+            getDetails: {
+                type: UserType,
+                args: {
+                    name: {
+                        description: 'the name of the child',
+                        type: new GraphQLNonNull(GraphQLString)
+                    }
+                },
+                resolve: (root, {name}) => {
+                }
             }
         }
     }

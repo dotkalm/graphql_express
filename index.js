@@ -1,15 +1,18 @@
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
-const { buildSchema } = require('graphql');
 const app = express();
 const session = require('express-session')
+const cors = require('cors')
+
 const Schema = require('./schema/')
 const bodyParser = require('body-parser');
 
-
+app.use(cors())
 
 const root = {
-    ip: function (args, request){
+    rollDice: ({numDice,numSides}) => {
+        console.log(numDice,numSides)
+        console.log(request.ip, args)
         return request.ip;
     }
 }
@@ -22,7 +25,6 @@ app.use(session(
         saveUninitialized: true
     })
 );
-
 app.use(
     '/graphql', 
     graphqlHTTP({
