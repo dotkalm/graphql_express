@@ -1,5 +1,5 @@
 const graphql = require('graphql');
-const { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLObjectType } = graphql;
+const { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLObjectType, GraphQLInt } = graphql;
 const { myKids } = require('../types')
 const Pool = require('pg-pool')
 
@@ -25,10 +25,10 @@ const removeOffspring = async (args) => {
 const addOffspring = async (args) => {
     const {name, lat, long} = args
     const pool = new Pool(dbConfig)
+    console.log(args)
     const client = await pool.connect()
-    const coords = {lat: lat, long: long}
     try{
-        return client.query(`INSERT INTO kids (name, birthplace_geography) VALUES ('${name}, ${coords}');`)
+        return client.query(`INSERT INTO kids (name, birthplace_geography) VALUES ('${name}', ST_MakePoint(${lat},${long}));`)
     } finally{
         client.release()
     }
