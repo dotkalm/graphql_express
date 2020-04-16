@@ -23,11 +23,12 @@ const removeOffspring = async (args) => {
 }
 
 const addOffspring = async (args) => {
-    const {name} = args
+    const {name, lat, long} = args
     const pool = new Pool(dbConfig)
     const client = await pool.connect()
+    const coords = {lat: lat, long: long}
     try{
-        return client.query(`INSERT INTO kids (name) VALUES ('${name}');`)
+        return client.query(`INSERT INTO kids (name, birthplace_geography) VALUES ('${name}, ${coords}');`)
     } finally{
         client.release()
     }
@@ -51,6 +52,8 @@ const Mutation = new GraphQLObjectType({
             type: myKids,
             args: {
                 name: { type: new GraphQLNonNull(GraphQLString) },
+                lat: { type: new GraphQLNonNull(GraphQLInt) },
+                long: { type: new GraphQLNonNull(GraphQLInt) }
             },
             resolve(parent, args){
                 return addOffspring(args)
@@ -90,7 +93,6 @@ const Mutation = new GraphQLObjectType({
                 name: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve(parent, args){
-                console.log(args)
                 return removeOffspring(args)
             }
         }

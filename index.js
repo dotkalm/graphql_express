@@ -11,7 +11,7 @@ app.use(cors())
 
 const root = {
     getDetailsForChild: ({name}) => {
-        console.log(name)
+        console.log("um")
     }
 }
 app.use(session(

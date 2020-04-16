@@ -20,8 +20,13 @@ const myKids = new graphql.GraphQLObjectType({
             },
             birthday: {
                 type: GraphQLDateTime,
+            },
+            lat: {
+                type: graphql.GraphQLInt
+            },
+            long: {
+                type: graphql.GraphQLInt
             }
-
         }
     }
 })

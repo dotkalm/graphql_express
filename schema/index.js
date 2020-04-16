@@ -37,8 +37,19 @@ const getBirthdays = async () => {
     }
 }
 const getDetailsForChild = async (child) => {
-    console.log(child)
-    return [{name: child}]
+    const pool = new Pool(dbConfig)
+    const client = await pool.connect()
+    try{
+        const result = await client.query(`SELECT name, 
+        TO_CHAR(birthday, 'DD-MON-YYYY')AS "birthday", 
+        TO_CHAR(birthday, 'HH12:MI AM')AS "time" 
+        FROM kids 
+        WHERE name = '${child}';`)
+        console.log(result.rows)
+        return result.rows
+    } finally{
+        client.release()
+    }
 }
 const RootQuery = new graphql.GraphQLObjectType({  
     name: 'Query',
@@ -57,7 +68,7 @@ const RootQuery = new graphql.GraphQLObjectType({
                 } 
             },
             getDetails: {
-                type: new graphql.GraphQLList(myKids),
+                type: new graphql.GraphQLList(kidsBirthdays),
                 args: {
                     name: {
                         description: 'the name of the child',
