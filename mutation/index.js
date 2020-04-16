@@ -1,5 +1,5 @@
 const graphql = require('graphql');
-const { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLObjectType, GraphQLInt } = graphql;
+const { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLObjectType, GraphQLFloat } = graphql;
 const { myKids } = require('../types')
 const Pool = require('pg-pool')
 
@@ -52,8 +52,8 @@ const Mutation = new GraphQLObjectType({
             type: myKids,
             args: {
                 name: { type: new GraphQLNonNull(GraphQLString) },
-                lat: { type: new GraphQLNonNull(GraphQLInt) },
-                long: { type: new GraphQLNonNull(GraphQLInt) }
+                lat: { type: new GraphQLNonNull(GraphQLFloat) },
+                long: { type: new GraphQLNonNull(GraphQLFloat) }
             },
             resolve(parent, args){
                 return addOffspring(args)
