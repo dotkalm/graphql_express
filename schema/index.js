@@ -15,7 +15,15 @@ const getOffspring = async () => {
     const pool = new Pool(dbConfig)
     const client = await pool.connect()
     try{
-        const result = await client.query('SELECT * FROM kids')
+        const result = await client.query(`SELECT 
+            id,
+            lat,
+            long,
+            name,
+            TO_CHAR(birthday, 'DD-MON-YYYY')AS "birthday", 
+            TO_CHAR(birthday, 'HH12:MI AM')AS "time"
+            FROM kids`)
+        console.log(result.rows)
         return result.rows
     } finally{
         client.release()
