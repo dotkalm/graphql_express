@@ -28,7 +28,7 @@ const addOffspring = async (args) => {
     console.log(args)
     const client = await pool.connect()
     try{
-        return client.query(`INSERT INTO kids (name, birthplace_geography) VALUES ('${name}', ST_MakePoint(${lat},${long}));`)
+        return client.query(`INSERT INTO kids (name, birthplace_geography) VALUES ('${name}', ST_MakePoint(${long},${lat}));`)
     } finally{
         client.release()
     }
