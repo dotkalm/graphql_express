@@ -5,6 +5,7 @@ const {
     GraphQLID,
     GraphQLString,
     GraphQLInt,
+    GraphQLFloat,
     GraphQLNonNull 
 } = graphql;
 
@@ -22,10 +23,10 @@ const myKids = new graphql.GraphQLObjectType({
                 type: GraphQLDateTime,
             },
             lat: {
-                type: graphql.GraphQLInt
+                type: graphql.GraphQLFloat
             },
             long: {
-                type: graphql.GraphQLInt
+                type: graphql.GraphQLFloat
             }
         }
     }
