@@ -1,7 +1,7 @@
-
-module.exports.addUser = async (args) => {
+const addUser = async (args) => {
 
     return 'add user'
 }
 
+module.exports = { addUser }
 
