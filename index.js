@@ -3,15 +3,12 @@ const graphqlHTTP = require('express-graphql');
 const app = express();
 const session = require('express-session')
 const cors = require('cors')
-const bcrypt    = require('bcrypt');
 const Schema = require('./schema/')
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 4000
 
 app.use(cors())
 
-const hashedPassword = bcrypt.hashSync('password', bcrypt.genSaltSync(10));
-console.log( hashedPassword )
 
 const root = {
     getDetailsForChild: ({name}) => {

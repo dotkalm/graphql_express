@@ -106,11 +106,14 @@ const Mutation = new GraphQLObjectType({
         addUser: {
             type: userInfo,
             args: {
+                username: { type: new GraphQLNonNull(GraphQLString) },
+                hashedPassword: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve(parent, args){
                 return addUser(args)
                     .then(res => {
                         if (res) {
+                            console.log(res)
                             return res
                         }
                         return new Error(`user no can be created`)
