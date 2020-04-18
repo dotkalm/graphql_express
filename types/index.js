@@ -53,4 +53,19 @@ const kidsBirthdays = new graphql.GraphQLObjectType({
         }
     }
 })
-module.exports = { myKids, kidsBirthdays }
+
+const userInfo = new graphql.GraphQLObjectType({
+    name: 'user',
+    fields: () => {
+        return{
+            username:{
+                type: graphql.GraphQLString
+            },
+            hashedPassword:{
+                type: graphql.GraphQLString
+            } 
+        }
+    }
+})
+
+module.exports = { myKids, kidsBirthdays, userInfo }

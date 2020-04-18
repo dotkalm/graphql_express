@@ -1,7 +1,8 @@
 const graphql = require('graphql');
 const { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLObjectType, GraphQLFloat } = graphql;
-const { myKids } = require('../types')
+const { myKids, userInfo } = require('../types')
 const Pool = require('pg-pool')
+const {addUser} = require('./users.js')
 
 const dbConfig = {
   user: process.env.DB_USER,
@@ -100,6 +101,23 @@ const Mutation = new GraphQLObjectType({
             },
             resolve(parent, args){
                 return removeOffspring(args)
+            }
+        },
+        addUser: {
+            type: userInfo,
+            args: {
+            },
+            resolve(parent, args){
+                return addUser(args)
+                    .then(res => {
+                        if (res) {
+                            return res
+                        }
+                        return new Error(`user no can be created`)
+                    })
+                    .catch(() => {
+                        return new Error(`bigtime error making user`)
+                    })
             }
         }
     })
