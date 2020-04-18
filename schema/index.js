@@ -19,6 +19,7 @@ const getOffspring = async () => {
             id,
             lat,
             long,
+            geohash,
             name,
             TO_CHAR(birthday, 'DD-MON-YYYY')AS "birthday", 
             TO_CHAR(birthday, 'HH12:MI AM')AS "time"

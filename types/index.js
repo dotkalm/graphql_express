@@ -1,5 +1,4 @@
 const graphql = require('graphql');
-const { GraphQLDateTime } = require('graphql-iso-date')
 const {
     GraphQLObjectType,
     GraphQLID,
@@ -22,8 +21,14 @@ const myKids = new graphql.GraphQLObjectType({
             birthday: {
                 type: GraphQLString,
             },
+            time: {
+                type: GraphQLString,
+            },
             lat: {
                 type: graphql.GraphQLFloat
+            },
+            geohash: {
+                type: GraphQLString
             },
             long: {
                 type: graphql.GraphQLFloat
