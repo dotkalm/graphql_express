@@ -11,14 +11,19 @@ const checkAuth = async (dbConfig, username, password) => {
             WHERE username = '${username}';`)
         const userObj = result.rows[0]
         if(userObj === undefined){
-            console.log("cannot find user")
+            throw new Error("cannot find user") 
         }else{
-            console.log(userObj, password)
-            const result = bcrypt.compareSync(password, userObj.hashedpassword)
-            console.log(result)
+            const passwordsMatch = bcrypt.compareSync(password, userObj.hashedpassword)
+            if(passwordsMatch){
+                console.log("thats it")
+            }else{
+                throw new Error("wrong password") 
+            }
         }
         return result.rows
-    } finally{
+    } catch(error){
+        console.log(error.message)
+    }finally{
         client.release()
     }
 }
