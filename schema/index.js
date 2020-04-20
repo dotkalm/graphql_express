@@ -1,7 +1,8 @@
 const graphql = require ('graphql');  
 const Pool = require('pg-pool')
 const Mutation = require('../mutation')
-const { myKids, kidsBirthdays} = require('../types')
+const { myKids, userInfo, kidsBirthdays} = require('../types')
+const { checkAuth } = require('./users.js')
 
 const dbConfig = {
   user: process.env.DB_USER,
@@ -86,6 +87,22 @@ const RootQuery = new graphql.GraphQLObjectType({
                 },
                 resolve: (root, {name}) => {
                     return getDetailsForChild(name)
+                }
+            },
+            logIn: {
+                type:   new graphql.GraphQLList(userInfo),
+                args: {
+                    username: {
+                        description: 'username',
+                        type: new graphql.GraphQLNonNull(graphql.GraphQLString)
+                    },
+                    password: {
+                        description: 'password',
+                        type: new graphql.GraphQLNonNull(graphql.GraphQLString)
+                    }
+                },
+                resolve: (root, {username, password}) => {
+                    return checkAuth(dbConfig, username, password)
                 }
             }
         }

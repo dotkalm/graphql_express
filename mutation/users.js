@@ -3,9 +3,7 @@ const Pool = require('pg-pool')
 
 const addUser = async (args, dbConfig) => {
     const pool = new Pool(dbConfig)
-
     const hashedPassword = bcrypt.hashSync(args.hashedPassword, bcrypt.genSaltSync(12));
-
     const client = await pool.connect()
     try{
         return client.query(`
@@ -19,6 +17,7 @@ const addUser = async (args, dbConfig) => {
     }
 
 }
+
 
 module.exports = { addUser }
 
