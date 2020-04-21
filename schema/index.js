@@ -104,8 +104,10 @@ const RootQuery = new graphql.GraphQLObjectType({
                 resolve: (root, args, context) => {
                     const { username, password } = args
                     if(checkAuth(dbConfig, username, password)){
+                        let cookieValue
+                        context.res.set('logged2222222222222222222222', cookieValue)
                         context.session.logged = true
-                        console.log(context.session)
+                        console.log(context.res)
                         return [{username: username}]
                     }
                 }
