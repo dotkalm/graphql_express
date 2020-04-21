@@ -16,7 +16,7 @@ const checkAuth = async (dbConfig, username, password, context) => {
             const passwordsMatch = bcrypt.compareSync(password, userObj.hashedpassword)
             if(passwordsMatch){
                 console.log(result.rows[0])
-                return true
+                return result.rows
             }else{
                 throw new Error("wrong password") 
             }
