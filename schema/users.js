@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const Pool = require('pg-pool')
 
-const checkAuth = async (dbConfig, username, password) => {
+const checkAuth = async (dbConfig, username, password, context) => {
     const pool = new Pool(dbConfig)
     const client = await pool.connect()
     console.log(username, password)
@@ -15,12 +15,11 @@ const checkAuth = async (dbConfig, username, password) => {
         }else{
             const passwordsMatch = bcrypt.compareSync(password, userObj.hashedpassword)
             if(passwordsMatch){
-                console.log("thats it")
+                return true
             }else{
                 throw new Error("wrong password") 
             }
         }
-        return result.rows
     } catch(error){
         console.log(error.message)
     }finally{
