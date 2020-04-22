@@ -27,13 +27,14 @@ app.use(session(
         saveUninitialized: true
     })
 );
-app.use(
-    '/graphql', 
-    graphqlHTTP({
+app.use('/graphql',(req, res) => {
+    return graphqlHTTP({
     schema: Schema,
     rootValue: root,
     graphiql: true,
-    }));
+    context: {req, res},
+    })(req, res);
+})
 
 app.listen(PORT);
 

@@ -103,6 +103,7 @@ const RootQuery = new graphql.GraphQLObjectType({
                 },
                 resolve: (root, args, context) => {
                     const { username, password } = args
+                    console.log(context.session.logged)
                     let user = ''
                     return checkAuth(dbConfig, username, password)
                 }
