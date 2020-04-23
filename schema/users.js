@@ -15,7 +15,6 @@ const checkAuth = async (dbConfig, username, password, context) => {
             const passwordsMatch = bcrypt.compareSync(password, userObj.hashedpassword)
             if(passwordsMatch){
                 context.req.session.logged = true
-                console.log(context.req.session)
 
                 return result.rows
             }else{

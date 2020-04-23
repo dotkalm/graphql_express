@@ -5,7 +5,8 @@ const session = require('express-session')
 const cors = require('cors')
 const Schema = require('./schema/')
 const bodyParser = require('body-parser');
-const PORT = process.env.PORT || 4000
+require('dotenv').config()
+const PORT = process.env.PORT 
 
 app.use(cors({
     credentials: true,
@@ -20,7 +21,7 @@ const root = {
 }
 app.use(session(
     { 
-        secret: 'keyboard cat', 
+        secret: process.env.MIDDLEWARE_SECRET, 
         cookie: { maxAge: 60000 }, 
         proxy: true,
         resave: true,

@@ -3,11 +3,13 @@ const Pool = require('pg-pool')
 const Mutation = require('../mutation')
 const { myKids, userInfo, kidsBirthdays} = require('../types')
 const { checkAuth } = require('./users.js')
+require('dotenv').config()
 
+console.log(process.env)
 const dbConfig = {
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
-  database: 'graphql_hello',
+  database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
 }
@@ -25,7 +27,6 @@ const getOffspring = async () => {
             TO_CHAR(birthday, 'DD-MON-YYYY')AS "birthday", 
             TO_CHAR(birthday, 'HH12:MI AM')AS "time"
             FROM kids`)
-        console.log(result.rows)
         return result.rows
     } finally{
         client.release()
@@ -40,7 +41,6 @@ const getBirthdays = async () => {
         TO_CHAR(birthday, 'DD-MON-YYYY')AS "birthday", 
         TO_CHAR(birthday, 'HH12:MI AM')AS "time" 
         FROM kids;`)
-        console.log(result.rows)
         return result.rows
     } finally{
         client.release()
@@ -55,7 +55,6 @@ const getDetailsForChild = async (child) => {
         TO_CHAR(birthday, 'HH12:MI AM')AS "time" 
         FROM kids 
         WHERE name = '${child}';`)
-        console.log(result.rows)
         return result.rows
     } finally{
         client.release()
