@@ -1,5 +1,6 @@
 const graphql = require ('graphql');  
 const Pool = require('pg-pool')
+const { Client } = require('pg');
 const Mutation = require('../mutation')
 const { myKids, userInfo, kidsBirthdays} = require('../types')
 const { checkAuth } = require('./users.js')
