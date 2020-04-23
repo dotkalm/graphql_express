@@ -5,7 +5,6 @@ const { myKids, userInfo, kidsBirthdays} = require('../types')
 const { checkAuth } = require('./users.js')
 require('dotenv').config()
 
-console.log(process.env)
 const dbConfig = {
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
