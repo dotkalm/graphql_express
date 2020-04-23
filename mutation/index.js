@@ -3,11 +3,12 @@ const { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLObjectType, GraphQLFloa
 const { myKids, userInfo } = require('../types')
 const Pool = require('pg-pool')
 const {addUser} = require('./users.js')
+require('dotenv').config()
 
 const dbConfig = {
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
-  database: 'graphql_hello',
+  database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
 }
