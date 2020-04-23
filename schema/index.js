@@ -24,8 +24,9 @@ const getOffspring = async () => {
             name,
             TO_CHAR(birthday, 'DD-MON-YYYY')AS "birthday", 
             TO_CHAR(birthday, 'HH12:MI AM')AS "time"
-            FROM kids`)
-        console.log(result.rows)
+            FROM kids
+            ORDER BY 
+                id DESC`)
         return result.rows
     } finally{
         client.release()
@@ -40,7 +41,6 @@ const getBirthdays = async () => {
         TO_CHAR(birthday, 'DD-MON-YYYY')AS "birthday", 
         TO_CHAR(birthday, 'HH12:MI AM')AS "time" 
         FROM kids;`)
-        console.log(result.rows)
         return result.rows
     } finally{
         client.release()
@@ -55,7 +55,6 @@ const getDetailsForChild = async (child) => {
         TO_CHAR(birthday, 'HH12:MI AM')AS "time" 
         FROM kids 
         WHERE name = '${child}';`)
-        console.log(result.rows)
         return result.rows
     } finally{
         client.release()
@@ -73,8 +72,13 @@ const RootQuery = new graphql.GraphQLObjectType({
             },
             birthdays: {
                 type: new graphql.GraphQLList(kidsBirthdays),
-                resolve: () => {
-                    return getBirthdays()
+                resolve: (root, args, context) => {
+                    const { logged } = context.req.session
+                    if (!logged) {
+                        return []
+                    }else{
+                        return getBirthdays()
+                    }
                 } 
             },
             getDetails: {

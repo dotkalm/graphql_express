@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const Pool = require('pg-pool')
+require('dotenv').config()
 
 const checkAuth = async (dbConfig, username, password, context) => {
     const pool = new Pool(dbConfig)
@@ -15,8 +16,6 @@ const checkAuth = async (dbConfig, username, password, context) => {
             const passwordsMatch = bcrypt.compareSync(password, userObj.hashedpassword)
             if(passwordsMatch){
                 context.req.session.logged = true
-                console.log(context.req.session)
-
                 return result.rows
             }else{
                 throw new Error("wrong password") 

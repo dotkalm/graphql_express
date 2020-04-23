@@ -6,6 +6,7 @@ const cors = require('cors')
 const Schema = require('./schema/')
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 4000
+require('dotenv').config()
 
 app.use(cors({
     credentials: true,
@@ -15,12 +16,11 @@ app.use(cors({
 
 const root = {
     getDetailsForChild: ({name}) => {
-        console.log("um")
     }
 }
 app.use(session(
     { 
-        secret: 'keyboard cat', 
+        secret: process.env.MIDDLEWARE_SECRET, 
         cookie: { maxAge: 60000 }, 
         proxy: true,
         resave: true,
@@ -38,4 +38,3 @@ app.use('/graphql',(req, res) => {
 
 app.listen(PORT);
 
-console.log('Running a GraphQL API server at http://localhost:4000/graphql')
