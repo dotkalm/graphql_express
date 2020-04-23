@@ -3,11 +3,12 @@ const Pool = require('pg-pool')
 const Mutation = require('../mutation')
 const { myKids, userInfo, kidsBirthdays} = require('../types')
 const { checkAuth } = require('./users.js')
+require('dotenv').config()
 
 const dbConfig = {
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
-  database: 'graphql_hello',
+  database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
 }
