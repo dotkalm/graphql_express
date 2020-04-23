@@ -6,32 +6,25 @@ const { myKids, userInfo, kidsBirthdays} = require('../types')
 const { checkAuth } = require('./users.js')
 require('dotenv').config()
 
-const dbConfig = {
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DATABASE,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
+let ssl = false
+if(process.env.ON_HEROKU === 1){
+    ssl = true
 }
-
 const getOffspring = async () => {
-    const pool = new Pool(dbConfig)
-    const client = await pool.connect()
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: ssl
+    });
+    client.connect()
     try{
-        const result = await client.query(`SELECT 
-            id,
-            lat,
-            long,
-            geohash,
+        const result = await client.query(`
+            SELECT
             name,
-            TO_CHAR(birthday, 'DD-MON-YYYY')AS "birthday", 
-            TO_CHAR(birthday, 'HH12:MI AM')AS "time"
-            FROM kids
-            ORDER BY 
-                id DESC`)
+            TO_CHAR(birthday, 'HH12:MI AM')AS "time" 
+            FROM kids;`)
         return result.rows
     } finally{
-        client.release()
+        client.end();
     }
 }
 
