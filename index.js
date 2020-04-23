@@ -35,5 +35,7 @@ app.use('/graphql',(req, res) => {
     })(req, res);
 })
 
-app.listen(PORT);
+app.listen(PORT, () => {
+    console.log(`listening to server on ${PORT}`)
+});
 
