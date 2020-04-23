@@ -20,8 +20,8 @@ const getOffspring = async () => {
         const result = await client.query(`
             SELECT
             name,
-            TO_CHAR(birthday, 'HH12:MI AM')AS "time" 
-            FROM kids;`)
+            TO_CHAR(time, 'HH12:MI AM')AS "time" 
+            FROM locations;`)
         return result.rows
     } finally{
         client.end();
