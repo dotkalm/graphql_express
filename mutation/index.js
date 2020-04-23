@@ -31,6 +31,7 @@ const addOffspring = async (args) => {
     const client = await pool.connect()
     try{
         return client.query(`
+        //EXECUTE loc_insert('om2','(33.4, 22.2)', 33.4, 22.2, ST_GeoHash(ST_MakePoint(33.4, 22.2)))
             INSERT INTO kids (name, birthplace, lat, long, geohash) 
             VALUES (
                 '${name}', 

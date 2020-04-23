@@ -18,8 +18,6 @@
     "express-session": "^1.17.0",
     "graphql": "^14.6.0",
     "graphql-iso-date": "^3.6.1",
-    "mongod": "^2.0.0",
-    "mongodb": "^3.5.5",
     "nodemon": "^2.0.2",
     "pg": "^7.18.2",
     "sqlite3": "^4.1.1"
