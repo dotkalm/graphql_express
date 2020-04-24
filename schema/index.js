@@ -10,7 +10,7 @@ let ssl = false
 if(process.env.ON_HEROKU === 1){
     ssl = true
 }
-const getOffspring = async () => {
+const getLocations = async () => {
     const client = new Client({
         connectionString: process.env.DATABASE_URL,
         ssl: ssl
@@ -19,9 +19,15 @@ const getOffspring = async () => {
     try{
         const result = await client.query(`
             SELECT
+            id,
             name,
-            TO_CHAR(time, 'HH12:MI AM')AS "time" 
+            TO_CHAR(time, 'HH12:MI AM')AS "time", 
+            TO_CHAR(time, 'DD-MON-YYYY')AS "day",
+            lat,
+            long,
+            geohash
             FROM locations;`)
+        console.log(result.rows)
         return result.rows
     } finally{
         client.end();
@@ -59,10 +65,10 @@ const RootQuery = new graphql.GraphQLObjectType({
     name: 'Query',
     fields: () => {
         return {
-            kids: {
+            locations: {
                 type: new graphql.GraphQLList(myLocations),
                 resolve: (parentValue, args, request) => {
-                    return getOffspring()
+                    return getLocations()
                 } 
             },
             birthdays: {
@@ -98,11 +104,14 @@ const RootQuery = new graphql.GraphQLObjectType({
                     password: {
                         description: 'password',
                         type: new graphql.GraphQLNonNull(graphql.GraphQLString)
+                    },
+                    uid: {
+                        description: 'uid',
+                        type: graphql.GraphQLString
                     }
                 },
                 resolve: (root, args, context) => {
-                    const { username, password } = args
-                    return checkAuth(dbConfig, username, password, context)
+                    return checkAuth(args, context)
                 }
             }
         }

@@ -10,6 +10,7 @@ const PORT = process.env.PORT
 
 app.use(cors({
     credentials: true,
+    origin: 'https://localhost:3000'
 }))
 
 

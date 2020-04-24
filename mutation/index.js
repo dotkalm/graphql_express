@@ -36,18 +36,24 @@ const removeOffspring = async (args) => {
 }
 
 const addMyLocation = async (args) => {
-    const {name, lat, long} = args
+    const {name, lat, long, id} = args
     const pool = new Pool(dbConfig)
     console.log(args)
     const client = await pool.connect()
     try{
         return client.query(`
+            PREPARE location_insert 
+                (TEXT, POINT, DOUBLE PRECISION, DOUBLE PRECISION, TEXT, INTEGER) 
+                AS INSERT INTO locations 
+                VALUES($1, $2, $3, $4, $5, $6);
+            EXECUTE location_insert()
             INSERT INTO locations (name, birthplace, lat, long, geohash) 
             VALUES (
                 '${name}', 
                 '(${long},${lat})', 
                 ${lat}, ${long}, 
-                ST_GeoHash(ST_MakePoint(${long},${lat})));`)
+                ST_GeoHash(ST_MakePoint(${long},${lat})),
+                ${id});`)
     } finally{
         client.release()
     }
@@ -122,7 +128,7 @@ const Mutation = new GraphQLObjectType({
                 hashedPassword: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve(parent, args){
-                return addUser(args, dbConfig)
+                return addUser(args)
                     .then(res => {
                         if (res) {
                             return res

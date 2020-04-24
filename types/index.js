@@ -18,7 +18,7 @@ const myLocations = new graphql.GraphQLObjectType({
             id: {
                 type: graphql.GraphQLInt
             },
-            birthday: {
+            day: {
                 type: GraphQLString,
             },
             time: {

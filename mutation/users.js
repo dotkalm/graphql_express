@@ -1,21 +1,29 @@
 const bcrypt    = require('bcrypt');
-const Pool = require('pg-pool')
+const { Client } = require('pg');
 
-const addUser = async (args, dbConfig) => {
-    const pool = new Pool(dbConfig)
+const addUser = async (args) => {
     const hashedPassword = bcrypt.hashSync(args.hashedPassword, bcrypt.genSaltSync(12));
-    const client = await pool.connect()
-    try{
-        return client.query(`
-            INSERT INTO users (username, hashedPassword) 
-            VALUES (
-                '${args.username}', 
-                '${hashedPassword}');
-            `)
-    } finally{
-        client.release()
+    console.log(hashedPassword)
+    let ssl = false
+    if(process.env.ON_HEROKU === 1){
+        ssl = true
     }
-
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: ssl
+    });
+    client.connect()
+    try{
+        const prepareAndInsert = await client.query(`
+            PREPARE user_insert (TEXT, TEXT) AS INSERT INTO users VALUES ($1, $2);
+            EXECUTE user_insert('${args.username}','${hashedPassword}');
+        `)
+        return prepareAndInsert
+    } catch(error){
+        console.log(error.message)
+    }finally{
+        client.end()
+    }
 }
 
 
