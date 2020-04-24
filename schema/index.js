@@ -2,7 +2,7 @@ const graphql = require ('graphql');
 const Pool = require('pg-pool')
 const { Client } = require('pg');
 const Mutation = require('../mutation')
-const { myKids, userInfo, kidsBirthdays} = require('../types')
+const { myLocations, userInfo, kidsBirthdays} = require('../types')
 const { checkAuth } = require('./users.js')
 require('dotenv').config()
 
@@ -60,7 +60,7 @@ const RootQuery = new graphql.GraphQLObjectType({
     fields: () => {
         return {
             kids: {
-                type: new graphql.GraphQLList(myKids),
+                type: new graphql.GraphQLList(myLocations),
                 resolve: (parentValue, args, request) => {
                     return getOffspring()
                 } 

@@ -1,7 +1,7 @@
 const graphql = require('graphql');
 const { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLObjectType, GraphQLFloat } = graphql;
-const { myKids, userInfo } = require('../types')
-const Pool = require('pg-pool')
+const { myLocations, userInfo } = require('../types')
+const { Client } = require('pg');
 const {addUser} = require('./users.js')
 require('dotenv').config()
 
@@ -13,26 +13,36 @@ const dbConfig = {
   port: process.env.DB_PORT,
 }
 
+let ssl = false
+
+if(process.env.ON_HEROKU === 1){
+    ssl = true
+}
+
 const removeOffspring = async (args) => {
     const {name} = args
-    const pool = new Pool(dbConfig)
-    const client = await pool.connect()
+
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: ssl
+    });
+    client.connect()
+
     try{
         return client.query(`DELETE FROM kids WHERE name = '${name}';`)
     } finally{
-        client.release()
+        client.end();
     }
 }
 
-const addOffspring = async (args) => {
+const addMyLocation = async (args) => {
     const {name, lat, long} = args
     const pool = new Pool(dbConfig)
     console.log(args)
     const client = await pool.connect()
     try{
         return client.query(`
-        //EXECUTE loc_insert('om2','(33.4, 22.2)', 33.4, 22.2, ST_GeoHash(ST_MakePoint(33.4, 22.2)))
-            INSERT INTO kids (name, birthplace, lat, long, geohash) 
+            INSERT INTO locations (name, birthplace, lat, long, geohash) 
             VALUES (
                 '${name}', 
                 '(${long},${lat})', 
@@ -57,20 +67,20 @@ const renameOffspring = async (args) => {
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({
-        addChild: {
-            type: myKids,
+        addLocation: {
+            type: myLocations,
             args: {
                 name: { type: new GraphQLNonNull(GraphQLString) },
                 lat: { type: new GraphQLNonNull(GraphQLFloat) },
                 long: { type: new GraphQLNonNull(GraphQLFloat) }
             },
             resolve(parent, args){
-                return addOffspring(args)
+                return addMyLocation(args)
                     .then(res => {
                         if (res) {
                             return res
                         }
-                        return new Error(`child no can be created`)
+                        return new Error(`Location Could Not Be Added`)
                     })
                     .catch(() => {
                         return new Error(`bigtime error`)
@@ -78,7 +88,7 @@ const Mutation = new GraphQLObjectType({
             }
         },
         renameChild: {
-            type: myKids,
+            type: myLocations,
             args: {
                 newName: { type: new GraphQLNonNull(GraphQLString) },
                 oldName: { type: new GraphQLNonNull(GraphQLString) }
@@ -97,7 +107,7 @@ const Mutation = new GraphQLObjectType({
             }
         },
         deleteChild: {
-            type: myKids,
+            type: myLocations,
             args: {
                 name: { type: new GraphQLNonNull(GraphQLString) }
             },

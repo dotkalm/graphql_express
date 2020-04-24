@@ -8,8 +8,8 @@ const {
     GraphQLNonNull 
 } = graphql;
 
-const myKids = new graphql.GraphQLObjectType({
-    name: 'child',
+const myLocations = new graphql.GraphQLObjectType({
+    name: 'location',
     fields: () => {
         return{
             name:{
@@ -68,4 +68,4 @@ const userInfo = new graphql.GraphQLObjectType({
     }
 })
 
-module.exports = { myKids, kidsBirthdays, userInfo }
+module.exports = { myLocations, kidsBirthdays, userInfo }
