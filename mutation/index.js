@@ -5,13 +5,6 @@ const { Client } = require('pg');
 const {addUser} = require('./users.js')
 require('dotenv').config()
 
-const dbConfig = {
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-}
 
 let ssl = false
 
@@ -37,34 +30,31 @@ const removeOffspring = async (args) => {
 
 const addMyLocation = async (args) => {
     const {name, lat, long, id} = args
-    const pool = new Pool(dbConfig)
     console.log(args)
-    const client = await pool.connect()
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: ssl
+    });
+    client.connect()
+
     try{
-        return client.query(`
-            INSERT INTO locations (name, location, lat, long, geohash) 
+        const sendToDB = await client.query(`
+            INSERT INTO locations (name, location, lat, long, geohash, user_id) 
             VALUES (
                 '${name}', 
                 '(${long},${lat})', 
-                ${lat}, ${long}, 
-                ST_GeoHash(ST_MakePoint(${long},${lat}))
-                ;`)
+                ${lat}, 
+                ${long}, 
+                ST_GeoHash(ST_MakePoint(${long},${lat})),
+                ${id}
+                );`)
+        console.log(sendToDB)
+        return sendToDB
     } finally{
-        client.release()
+        client.end();
     }
 }
 
-const renameOffspring = async (args) => {
-    const {newName, oldName} = args
-    const pool = new Pool(dbConfig)
-    const client = await pool.connect()
-    try{
-        return client.query(`UPDATE kids SET name = '${newName}' WHERE name = '${oldName}';`)
-    } finally{
-        client.release()
-    }
-
-} 
 const Mutation = new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({
@@ -76,31 +66,14 @@ const Mutation = new GraphQLObjectType({
                 long: { type: new GraphQLNonNull(GraphQLFloat) }
             },
             resolve(parent, args){
+                console.log(args)
                 return addMyLocation(args)
                     .then(res => {
+                        console.log(res)
                         if (res) {
                             return res
                         }
                         return new Error(`Location Could Not Be Added`)
-                    })
-                    .catch(() => {
-                        return new Error(`bigtime error`)
-                    })
-            }
-        },
-        renameChild: {
-            type: myLocations,
-            args: {
-                newName: { type: new GraphQLNonNull(GraphQLString) },
-                oldName: { type: new GraphQLNonNull(GraphQLString) }
-            },
-            resolve(parent, args){
-                return renameOffspring(args)
-                    .then(res => {
-                        if (res) {
-                            return res
-                        }
-                        return new Error(`child no can be created`)
                     })
                     .catch(() => {
                         return new Error(`bigtime error`)
