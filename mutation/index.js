@@ -42,18 +42,13 @@ const addMyLocation = async (args) => {
     const client = await pool.connect()
     try{
         return client.query(`
-            PREPARE location_insert 
-                (TEXT, POINT, DOUBLE PRECISION, DOUBLE PRECISION, TEXT, INTEGER) 
-                AS INSERT INTO locations 
-                VALUES($1, $2, $3, $4, $5, $6);
-            EXECUTE location_insert()
-            INSERT INTO locations (name, birthplace, lat, long, geohash) 
+            INSERT INTO locations (name, location, lat, long, geohash) 
             VALUES (
                 '${name}', 
                 '(${long},${lat})', 
                 ${lat}, ${long}, 
-                ST_GeoHash(ST_MakePoint(${long},${lat})),
-                ${id});`)
+                ST_GeoHash(ST_MakePoint(${long},${lat}))
+                ;`)
     } finally{
         client.release()
     }
