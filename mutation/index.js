@@ -1,5 +1,5 @@
 const graphql = require('graphql');
-const { GraphQLString, GraphQLNonNull, GraphQLID, GraphQLObjectType, GraphQLFloat } = graphql;
+const { GraphQLString, GraphQLNonNull, GraphQLInt, GraphQLID, GraphQLObjectType, GraphQLFloat } = graphql;
 const { myLocations, userInfo } = require('../types')
 const { Client } = require('pg');
 const {addUser} = require('./users.js')
@@ -63,7 +63,8 @@ const Mutation = new GraphQLObjectType({
             args: {
                 name: { type: new GraphQLNonNull(GraphQLString) },
                 lat: { type: new GraphQLNonNull(GraphQLFloat) },
-                long: { type: new GraphQLNonNull(GraphQLFloat) }
+                long: { type: new GraphQLNonNull(GraphQLFloat) },
+                id: { type: new GraphQLNonNull(GraphQLInt) },
             },
             resolve(parent, args){
                 console.log(args)
